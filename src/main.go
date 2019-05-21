@@ -2,23 +2,18 @@ package main
 
 import (
 	"fmt"
-	"timeUtil"
+	"util"
+	"time"
+	"recordType"
 )
 
-type record struct {
-	name           string
-	quantity       int
-	price          float32
-	expirationDate int64
-	dateOfRecord   int64
-}
 
 func main() {
 	fmt.Println("Welcome to Smart Pharma")
-	dt := timeUtil.GetFormattedCurrentTime()
-	fmt.Println(dt)
+	st := int64(time.Now().Unix())
+	fmt.Println(util.ConvertToFormattedDate(st))
 }
 
-func createARecord(name string, quantity int, price float32, expirationDate int64, dateOfRecord int64) record {
-	return record{name, quantity, price, expirationDate, dateOfRecord}
+func createARecord(name string, quantity int, price float32, expirationDate int64, dateOfRecord int64) recordType.Record {
+	return recordType.Record{name, quantity, price, expirationDate, dateOfRecord}
 }
