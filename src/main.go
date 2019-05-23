@@ -5,12 +5,14 @@ import (
 	"util"
 	"time"
 	"recordType"
+	"dbconnector"
 )
 
 
 func main() {
 	fmt.Println("Welcome to Smart Pharma")
 	st := int64(time.Now().Unix())
+	
 	fmt.Println(util.ConvertToFormattedDate(st))
 }
 
