@@ -1,9 +1,10 @@
 package recordType 
 
 type Record struct {
+	Id 			   int
 	Name           string
 	Quantity       int
 	Price          float32
-	ExpirationDate int64
-	DateOfRecord   int64
+	ExpirationDate string
+	DateOfRecord   string
 }
