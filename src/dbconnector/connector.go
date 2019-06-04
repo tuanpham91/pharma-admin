@@ -7,11 +7,14 @@ import (
 )
 var databaseName = "record"
 var pathToDatabase = "./record.db"
+var recordTableName = "med_record"
+var inventoryTableName = "med_inventory"
 
 var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, price REAL, expirationDate TEXT, dateOfRecord TEXT)"
 var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
+var updateInventoryQuery = ""
 
 func GenerateDatabases() {
 	RunQuery(initializeInventoryTable)
