@@ -1,10 +1,10 @@
 package util 
 
 import (
-	//"os"
+	_ "os"
 	"recordType"
 )
 
-func WriteRecordToCSVFile(r recordType.Record, destination string) {
-	//file, err := os.Create(destination)
+func WriteRecordToCSVFile(r []recordType.Record, destination string) {
+	
 }

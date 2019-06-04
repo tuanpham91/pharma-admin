@@ -12,7 +12,7 @@ import (
 func main() {
 	fmt.Println("Welcome to Smart Pharma")
 	// st := int64(time.Now().Unix())
-	// dbconnector.GenerateDatabase("tuan")
+	// dbconnector.GenerateDatabases("tuan")
 	// rec := createARecord("tuan",10,99.99,"1.1.2010", "2.2.2020")
 	// dbconnector.AddRecordToDatabase(rec)
 	// fmt.Println(util.ConvertToFormattedDate(st))

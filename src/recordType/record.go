@@ -8,3 +8,10 @@ type Record struct {
 	ExpirationDate string
 	DateOfRecord   string
 }
+
+type ItemInventory struct {
+	Id 				int
+	Name 			string 
+	Quantity 		int 
+	ExpirationDate 	string
+}

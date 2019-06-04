@@ -7,14 +7,22 @@ import (
 )
 var databaseName = "record"
 var pathToDatabase = "./record.db"
+
+var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, price REAL, expirationDate TEXT, dateOfRecord TEXT)"
+var initializeInventoryTable = "CREATE TABLE IF NOT EXIST med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING"
+
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
 
-func GenerateDatabase(name string) {
-	database, _ := sql.Open("sqlite3", pathToDatabase)
-	statement, _ := database.Prepare("CREATE TABLE IF NOT EXISTS med_record (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, price REAL, expirationDate TEXT, dateOfRecord TEXT)")
-	statement.Exec()
+func GenerateDatabases(name string) {
+	RunQuery(initializeInventoryTable)
+	RunQuery(initializeRecordTable)
 }
 
+func RunQuery(query string) {
+	database, _ := sql.Open("sqlite3", pathToDatabase)
+	statement, _ := database.Prepare(query)
+	statement.Exec()
+}
 func AddRecordToDatabase(record recordType.Record) {
 	database, _ := sql.Open("sqlite3", pathToDatabase)
 	statement, _ := database.Prepare(addRecordQuery)
@@ -39,4 +47,8 @@ func RowsToRecord(rows *sql.Rows) []recordType.Record {
 		res = append(res, r)
 	}
 	return res
+}
+
+func SubtractARecord(r recordType.Record) {
+
 }
