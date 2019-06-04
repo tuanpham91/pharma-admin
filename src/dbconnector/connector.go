@@ -9,18 +9,25 @@ var databaseName = "record"
 var pathToDatabase = "./record.db"
 
 var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, price REAL, expirationDate TEXT, dateOfRecord TEXT)"
-var initializeInventoryTable = "CREATE TABLE IF NOT EXIST med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING"
+var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
 
-func GenerateDatabases(name string) {
+func GenerateDatabases() {
 	RunQuery(initializeInventoryTable)
 	RunQuery(initializeRecordTable)
 }
 
 func RunQuery(query string) {
-	database, _ := sql.Open("sqlite3", pathToDatabase)
-	statement, _ := database.Prepare(query)
+	database, err := sql.Open("sqlite3", pathToDatabase)
+	if (err != nil) {
+		fmt.Print(err)
+	}
+	 
+	statement, err := database.Prepare(query)
+	if (err != nil) {
+		fmt.Print(err)
+	}
 	statement.Exec()
 }
 func AddRecordToDatabase(record recordType.Record) {
