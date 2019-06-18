@@ -14,7 +14,8 @@ var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER P
 var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
-var updateInventoryQuery = ""
+var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
+var checkInventoryQuery = "SELECT * FROM med_inventory WHERE name = ?"
 
 func GenerateDatabases() {
 	RunQuery(initializeInventoryTable)
@@ -60,5 +61,13 @@ func RowsToRecord(rows *sql.Rows) []recordType.Record {
 }
 
 func SubtractARecord(r recordType.Record) {
+	
+}
+
+func CheckInventory(name string) int {
+	database, _  := sql.Open("sqlite3", pathToDatabase)
+	statement, _ := database.Prepare(checkInventoryQuery)
+	rows, _ := statement.Query(name)
+	records := RowsToRecord(rows)
 
 }
