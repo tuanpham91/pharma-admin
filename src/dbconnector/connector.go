@@ -69,5 +69,9 @@ func CheckInventory(name string) int {
 	statement, _ := database.Prepare(checkInventoryQuery)
 	rows, _ := statement.Query(name)
 	records := RowsToRecord(rows)
-
+	
+	//for i, e := range records {
+	//	print(i,e)
+	// }
+	return len(records)
 }
