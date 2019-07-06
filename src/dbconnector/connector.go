@@ -70,7 +70,7 @@ func CheckInventory(name string) int {
 	rows, _ := statement.Query(name)
 	records := RowsToRecord(rows)
 	var res int = 0
-	for i, e := range records {
+	for _, e := range records {
 		res += e.Quantity
 	}
 	return len(records)
