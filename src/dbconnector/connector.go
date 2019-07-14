@@ -17,13 +17,19 @@ var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationD
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
 var checkInventoryQuery = "SELECT * FROM med_inventory WHERE name = ?"
 
-func GenerateDatabases() {
-	RunQuery(initializeInventoryTable)
-	RunQuery(initializeRecordTable)
+func GenerateDatabases(targetDb ...string) {
+	var dbPath string
+	if (len(targetDb) > 0) {
+		dbPath = targetDb[0]
+	} else {
+		dbPath = databaseName
+	}
+	RunQuery(initializeInventoryTable, dbPath)
+	RunQuery(initializeRecordTable, dbPath)
 }
 
-func RunQuery(query string) {
-	database, err := sql.Open("sqlite3", pathToDatabase)
+func RunQuery(query string, dbPath string) {
+	database, err := sql.Open("sqlite3", dbPath)
 	if (err != nil) {
 		fmt.Print(err)
 	}
@@ -34,8 +40,8 @@ func RunQuery(query string) {
 	}
 	statement.Exec()
 }
-func AddRecordToDatabase(record recordType.Record) {
-	database, _ := sql.Open("sqlite3", pathToDatabase)
+func AddRecordToDatabase(record recordType.Record, dbPath string) {
+	database, _ := sql.Open("sqlite3", dbPath)
 	statement, _ := database.Prepare(addRecordQuery)
 	statement.Exec(record.Name, record.Quantity, record.Price, record.ExpirationDate, record.DateOfRecord)
 }
@@ -64,8 +70,14 @@ func SubtractARecord(r recordType.Record) {
 	
 }
 
-func CheckInventory(name string) int {
-	database, _  := sql.Open("sqlite3", pathToDatabase)
+func CheckInventory(name string, dbPathArgs ...string) int {
+	var dbPath string
+	if (len(dbPathArgs) > 0) {
+		dbPath = dbPathArgs[0]
+	} else {
+		dbPath = databaseName
+	}
+	database, _  := sql.Open("sqlite3", dbPath)
 	statement, _ := database.Prepare(checkInventoryQuery)
 	rows, _ := statement.Query(name)
 	records := RowsToRecord(rows)
@@ -73,5 +85,5 @@ func CheckInventory(name string) int {
 	for _, e := range records {
 		res += e.Quantity
 	}
-	return len(records)
+	return res
 }
