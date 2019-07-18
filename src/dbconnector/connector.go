@@ -11,7 +11,7 @@ var recordTableName = "med_record"
 var inventoryTableName = "med_inventory"
 
 var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, price REAL, expirationDate TEXT, dateOfRecord TEXT)"
-var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, quantity INTEGER, expirationDate STRING)"
+var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
@@ -77,10 +77,21 @@ func CheckInventory(name string, dbPathArgs ...string) int {
 	} else {
 		dbPath = databaseName
 	}
-	database, _  := sql.Open("sqlite3", dbPath)
-	statement, _ := database.Prepare(checkInventoryQuery)
-	rows, _ := statement.Query(name)
+	database, err  := sql.Open("sqlite3", dbPath)
+	if (err != nil) {
+		fmt.Println("Something is wrong while opening the database")
+	}
+
+	statement, err := database.Prepare(checkInventoryQuery)
+	if (err != nil) {
+		fmt.Println("Something is wrong while Preparing the query " + err.Error())
+	}
+	rows, err := statement.Query(name)
+	if (err != nil) {
+		fmt.Println("Something is wrong while executing the statement")
+	}
 	records := RowsToRecord(rows)
+	fmt.Printf("There are %d rows", len(records))
 	var res int = 0
 	for _, e := range records {
 		res += e.Quantity
