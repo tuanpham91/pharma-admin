@@ -15,7 +15,8 @@ var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INT
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
-var checkInventoryQuery = "SELECT * FROM med_inventory WHERE name = ?"
+var checkInventoryQuery = "SELECT * FROM med_record where name = ?"
+var truncateTableQuery = "DELETE FROM ?"
 
 func GenerateDatabases(targetDb ...string) {
 	var dbPath string
@@ -39,6 +40,18 @@ func RunQuery(query string, dbPath string) {
 		fmt.Print(err)
 	}
 	statement.Exec()
+}
+
+func TruncateTable(tableName string, dbPath string) {
+	database, err := sql.Open("sqlite3", dbPath)
+	if (err != nil) {
+		fmt.Print(err)
+	}
+	statement, err := database.Prepare(truncateTableQuery)
+	if (err != nil) {
+		fmt.Print(err)
+	}
+	statement.Exec(tableName)
 }
 func AddRecordToDatabase(record recordType.Record, dbPath string) {
 	database, _ := sql.Open("sqlite3", dbPath)
@@ -90,6 +103,7 @@ func CheckInventory(name string, dbPathArgs ...string) int {
 	if (err != nil) {
 		fmt.Println("Something is wrong while executing the statement")
 	}
+	
 	records := RowsToRecord(rows)
 	fmt.Printf("There are %d rows", len(records))
 	var res int = 0
