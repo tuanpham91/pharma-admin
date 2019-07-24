@@ -14,9 +14,10 @@ var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER P
 var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
-var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
-var checkInventoryQuery = "SELECT * FROM med_record where name = ?"
 var truncateTableQuery = "DELETE FROM ?"
+
+var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
+var checkInventoryQuery = "SELECT * FROM med_record where name = ? and expirationDate = ?"
 
 func GenerateDatabases(targetDb ...string) {
 	var dbPath string
@@ -42,6 +43,23 @@ func RunQuery(query string, dbPath string) {
 	statement.Exec()
 }
 
+func UpsertInventoryRecord(re recordType.ItemInventory, dbPath string) {
+	database, err := sql.Open("sqlite3", dbPath)
+	if (err != nil) {
+		fmt.Print(err)
+	}
+	
+}
+
+func CheckIfInventoryRecordExists(re recordType.ItemInventory, dbPath string) bool {
+	database, err := sql.Open("sqlite3", dbPath)
+	if (err != nil) {
+		fmt.Print(err)
+	}
+	statement, _ := database.Prepare(checkInventoryQuery)
+	rows, _ := statement.Query(re.Name, re.ExpirationDate)
+	return (len(RowsToRecord(rows)) >= 1)
+}
 func TruncateTable(tableName string, dbPath string) {
 	database, err := sql.Open("sqlite3", dbPath)
 	if (err != nil) {

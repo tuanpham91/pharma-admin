@@ -1,0 +1,2 @@
+1. There should be a function which add the inventory record to database if there is not one or update if there is
+2. Test for that function
