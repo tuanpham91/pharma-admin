@@ -5,6 +5,7 @@ import (
 	"recordType"
 	"fmt"
 )
+
 var databaseName = "record"
 var pathToDatabase = "./record.db"
 var recordTableName = "med_record"
@@ -19,6 +20,8 @@ var truncateTableQuery = "DELETE FROM ?"
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
 var checkInventoryQuery = "SELECT * FROM med_record where name = ? and expirationDate = ?"
 
+var Database *sql.DB
+
 func GenerateDatabases(targetDb ...string) {
 	var dbPath string
 	if (len(targetDb) > 0) {
@@ -31,12 +34,7 @@ func GenerateDatabases(targetDb ...string) {
 }
 
 func RunQuery(query string, dbPath string) {
-	database, err := sql.Open("sqlite3", dbPath)
-	if (err != nil) {
-		fmt.Print(err)
-	}
-	 
-	statement, err := database.Prepare(query)
+	statement, err := Database.Prepare(query)
 	if (err != nil) {
 		fmt.Print(err)
 	}
@@ -44,42 +42,30 @@ func RunQuery(query string, dbPath string) {
 }
 
 func UpsertInventoryRecord(re recordType.ItemInventory, dbPath string) {
-	database, err := sql.Open("sqlite3", dbPath)
-	if (err != nil) {
-		fmt.Print(err)
-	}
 	
 }
 
 func CheckIfInventoryRecordExists(re recordType.ItemInventory, dbPath string) bool {
-	database, err := sql.Open("sqlite3", dbPath)
-	if (err != nil) {
-		fmt.Print(err)
-	}
-	statement, _ := database.Prepare(checkInventoryQuery)
+	statement, _ := Database.Prepare(checkInventoryQuery)
 	rows, _ := statement.Query(re.Name, re.ExpirationDate)
 	return (len(RowsToRecord(rows)) >= 1)
 }
+
 func TruncateTable(tableName string, dbPath string) {
-	database, err := sql.Open("sqlite3", dbPath)
-	if (err != nil) {
-		fmt.Print(err)
-	}
-	statement, err := database.Prepare(truncateTableQuery)
+	statement, err := Database.Prepare(truncateTableQuery)
 	if (err != nil) {
 		fmt.Print(err)
 	}
 	statement.Exec(tableName)
 }
+
 func AddRecordToDatabase(record recordType.Record, dbPath string) {
-	database, _ := sql.Open("sqlite3", dbPath)
-	statement, _ := database.Prepare(addRecordQuery)
+	statement, _ := Database.Prepare(addRecordQuery)
 	statement.Exec(record.Name, record.Quantity, record.Price, record.ExpirationDate, record.DateOfRecord)
 }
 
 func SelectQueryFromDB(query string) *sql.Rows {
-	database, _  := sql.Open("sqlite3", pathToDatabase)
-	rows, _ := database.Query(query)
+	rows, _ := Database.Query(query)
 	return rows
 }
 
