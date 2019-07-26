@@ -15,7 +15,7 @@ var initializeRecordTable = "CREATE TABLE IF NOT EXISTS med_record (id INTEGER P
 var initializeInventoryTable = "CREATE TABLE IF NOT EXISTS med_inventory (id INTEGER PRIMARY KEY, name TEXT, quantity INTEGER, expirationDate STRING)"
 
 var addRecordQuery = "INSERT INTO med_record (name, quantity, price, expirationDate, dateOfRecord) VALUES (?,?,?,?,?) "
-var truncateTableQuery = "DELETE FROM ?"
+var truncateTableQuery = "DELETE FROM med_record; DELETE FROM med_inventory"
 
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
 var checkInventoryQuery = "SELECT * FROM med_record where name = ? and expirationDate = ?"
@@ -51,12 +51,9 @@ func CheckIfInventoryRecordExists(re recordType.ItemInventory, dbPath string) bo
 	return (len(RowsToRecord(rows)) >= 1)
 }
 
-func TruncateTable(tableName string, dbPath string) {
-	statement, err := Database.Prepare(truncateTableQuery)
-	if (err != nil) {
-		fmt.Print(err)
-	}
-	statement.Exec(tableName)
+func TruncateTable() {
+	statement, _ := Database.Prepare(truncateTableQuery)
+	statement.Exec()
 }
 
 func AddRecordToDatabase(record recordType.Record, dbPath string) {
