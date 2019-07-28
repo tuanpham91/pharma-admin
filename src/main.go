@@ -6,10 +6,13 @@ import (
 	_ "time"
 	"recordType"
 	"dbconnector"
+	"database/sql"
 )
 
+var pathToDatabase = "./record.db"
 
 func main() {
+	dbconnector.Database, _ = sql.Open("sqlite3", pathToDatabase)
 	fmt.Println("Welcome to Smart Pharma")
 	// st := int64(time.Now().Unix())
 	dbconnector.GenerateDatabases()

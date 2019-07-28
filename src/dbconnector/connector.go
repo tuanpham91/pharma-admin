@@ -68,6 +68,11 @@ func SelectQueryFromDB(query string) *sql.Rows {
 
 func RowsToRecord(rows *sql.Rows) []recordType.Record {
 	var res []recordType.Record
+	//TODO : Handle the case Row doesnt have Next
+	if (rows == nil) {
+		fmt.Println("This is an empty record")
+		return nil // TODO : Return an empty array
+	}
 	for rows.Next() {
 		var r recordType.Record
 		var i int 
