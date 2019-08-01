@@ -1,5 +1,10 @@
+- Everything is wrong -> Check again
 - There should be a function that insert the med_inventory in case there is none
     Code -> Done
-    Test -> 
+    Test -> Done 
 - There should be a function that update the med_inventory in case there is already the same record in database
+    Code -> Done 
+    Test -> 
 - There should be a function that group up the process of adding, updating inventory every time a new inventory comes.
+
+- Clean up each file 
