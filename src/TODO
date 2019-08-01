@@ -1,2 +1,5 @@
-- There should be a function which add the inventory record to database if there is not one or update if there is
-- Test for that function#
+- There should be a function that insert the med_inventory in case there is none
+    Code -> Done
+    Test -> 
+- There should be a function that update the med_inventory in case there is already the same record in database
+- There should be a function that group up the process of adding, updating inventory every time a new inventory comes.

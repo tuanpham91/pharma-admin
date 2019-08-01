@@ -19,6 +19,7 @@ var truncateTableQuery = "DELETE FROM med_record; DELETE FROM med_inventory"
 
 var updateInventoryQuery = "UPDATE med_inventory WHERE name = ? AND expirationDate = ? SET quantity = quantity + ?"
 var checkInventoryQuery = "SELECT * FROM med_record where name = ? and expirationDate = ?"
+var addInventoryQuery = "INSERT INTO med_inventory (name, quantity, expirationDate) VALUES (?, ?, ?)"
 
 var Database *sql.DB
 
@@ -41,16 +42,6 @@ func RunQuery(query string, dbPath string) {
 	statement.Exec()
 }
 
-func UpsertInventoryRecord(re recordType.ItemInventory, dbPath string) {
-	
-}
-
-func CheckIfInventoryRecordExists(re recordType.ItemInventory, dbPath string) bool {
-	statement, _ := Database.Prepare(checkInventoryQuery)
-	rows, _ := statement.Query(re.Name, re.ExpirationDate)
-	return (len(RowsToRecord(rows)) >= 1)
-}
-
 func TruncateTable() {
 	statement, _ := Database.Prepare(truncateTableQuery)
 	statement.Exec()
@@ -61,17 +52,21 @@ func AddRecordToDatabase(record recordType.Record, dbPath string) {
 	statement.Exec(record.Name, record.Quantity, record.Price, record.ExpirationDate, record.DateOfRecord)
 }
 
-func SelectQueryFromDB(query string) *sql.Rows {
-	rows, _ := Database.Query(query)
-	return rows
+func UpdateInventoryInDatabase(product string, mhd string, change int) {
+	statement, _ := Database.Prepare(updateInventoryQuery)
+	statement.Exec(product, mhd, change)
+}
+
+func AddInventoryToDatabase(inv_record recordType.ItemInventory) {
+	statement, _ := Database.Prepare(addInventoryQuery)
+	statement.Exec(inv_record.Name, inv_record.Quantity, inv_record.ExpirationDate)
 }
 
 func RowsToRecord(rows *sql.Rows) []recordType.Record {
 	var res []recordType.Record
-	//TODO : Handle the case Row doesnt have Next
 	if (rows == nil) {
 		fmt.Println("This is an empty record")
-		return nil // TODO : Return an empty array
+		return nil 
 	}
 	for rows.Next() {
 		var r recordType.Record
@@ -85,8 +80,22 @@ func RowsToRecord(rows *sql.Rows) []recordType.Record {
 	return res
 }
 
-func SubtractARecord(r recordType.Record) {
-	
+func RowsToInventoryItems(rows *sql.Rows) []recordType.ItemInventory {
+	var res []recordType.ItemInventory
+	if (rows == nil) {
+		fmt.Println("This is an empty record")
+		return nil 
+	}
+	for rows.Next() {
+		var r recordType.ItemInventory
+		var i int 
+		err := rows.Scan(&i, &r.Name, &r.Quantity, &r.ExpirationDate)
+		if (err != nil ) {
+			fmt.Print(err)
+		}
+		res = append(res, r)
+	}
+	return res
 }
 
 func CheckInventory(name string, dbPathArgs ...string) int {

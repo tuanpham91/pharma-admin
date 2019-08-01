@@ -31,3 +31,27 @@ func TestCalculatingInventory(t *testing.T) {
 		t.Errorf(" The result was wrong")
 	}
 }
+
+func TestAddInventoryToDatabase(t *testing.T) {
+	TruncateTable()
+	AddInventoryToDatabase(recordType.ItemInventory{1, "Paracetamol", 10, "1.1.2020"})
+}
+
+// Test if the function returns correctly when there is a drug in med_inventory and when there is not
+func TestCheckingIfItemInInventory(t *testing.T) {
+	TruncateTable()
+	AddInventoryToDatabase(recordType.ItemInventory{1, "Paracetamol", 10, "1.1.2020"})
+	result := CheckIfItemExistsInInventory("Tuan", "100")
+	if (result == true) {
+		t.Errorf("TestCheckingIfItemInInventory : Result is wrong, it should be : false")
+	}
+	result2 := CheckIfItemExistsInInventory("Paracetamol", "1.1.2020")
+	// This is wrong, TODO -> Why ?
+	if (result2 == false){
+		t.Errorf("TestCheckingIfItemInInventory : Result is wrong, it should be : true")
+	}
+}
+
+func TestUpdateItemInvetory(t *testing.T) {
+
+}
