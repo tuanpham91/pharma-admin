@@ -51,7 +51,7 @@ func TestCheckInventoryForItemTotalNumber(t *testing.T) {
 	AddInventoryToDatabase(recordType.ItemInventory{1, "Paracetamol", 10, "1.1.2020"})
 	res := CheckInventoryForItemTotalNumber("Paracetamol","1.1.2020")
 	if (res !=10) {
-		t.Errorf("TestCheckInventoryForItemTotalNumber: The result is wrong")
+		t.Errorf("TestCheckInventoryForItemTotalNumber: The result is wrong : %d", res)
 	}
 }
 

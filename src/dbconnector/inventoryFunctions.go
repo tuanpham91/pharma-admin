@@ -6,8 +6,10 @@ import (
 	"fmt"
 )
 
-var addInventoryQuery = "UPDATE med_inventory SET quantity = quantity + ? WHERE name = ? AND expirationDate = ? "
-var subtractInventoryQuery = "UPDATE med_inventory SET quantity = quantity - ? WHERE name = ? AND expirationDate = ? "
+var addUpdateInventoryQuery = "UPDATE med_inventory SET quantity = quantity + ? WHERE name = ? AND expirationDate = ? "
+var subtractUpdateInventoryQuery = "UPDATE med_inventory SET quantity = quantity - ? WHERE name = ? AND expirationDate = ? "
+
+var addInventoryQuery = "INSERT INTO med_inventory (name, quantity, expirationDate) VALUES (?, ?, ?)"
 
 var checkInventoryQuery = "SELECT * FROM med_record where name = ? and expirationDate = ?"
 var checkIfItemExistsInventory = "SELECT * FROM med_inventory WHERE name = ? AND expirationDate = ?"
@@ -22,10 +24,10 @@ func UpdateInventoryInDatabase(product string, mhd string, change int) {
 	var query string
 	var absChange int
 	if (change >= 0) {
-		query = addInventoryQuery
+		query = addUpdateInventoryQuery
 		absChange = change
 	} else {
-		query = subtractInventoryQuery
+		query = subtractUpdateInventoryQuery
 		absChange = change*(-1)
 	}
 	statement, _ := Database.Prepare(query)
@@ -42,6 +44,7 @@ func CheckInventoryForItemTotalNumber(name string, date string) int {
 	res := RowsToInventoryItems(rows)
 	var total int = 0
 	for _, item  := range res {
+		fmt.Printf("Found an inventory: %d \n ", item.Quantity)
 		total += item.Quantity
 	}
 	return total
