@@ -43,9 +43,24 @@ func TruncateTable() {
 	statement.Exec()
 }
 
-func AddRecordToDatabase(record recordType.Record, dbPath string) {
+func AddRecordToDatabase(record recordType.Record) {
 	statement, _ := Database.Prepare(addRecordQuery)
 	statement.Exec(record.Name, record.Quantity, record.Price, record.ExpirationDate, record.DateOfRecord)
+}
+
+// A Function to handle every record that arrives
+// The workflow works like this 
+// A Record Arrives -> Check if already in inventory database with the same date -> If no then create a new one
+// If yes then update the old one
+// Record database should always be inserted.
+func HandleRecord(record recordType.Record) {
+	AddRecordToDatabase(record)
+	existed := CheckIfItemExistsInInventory(record.Name, record.ExpirationDate)
+	if (existed) {
+		UpdateInventoryInDatabase(record.Name, record.ExpirationDate, record.Quantity)
+	} else {
+		AddInventoryToDatabase(recordType.ItemInventory{1, record.Name, record.Quantity, record.ExpirationDate})
+	}
 }
 
 func RowsToRecord(rows *sql.Rows) []recordType.Record {
