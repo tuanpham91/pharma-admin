@@ -5,7 +5,7 @@ import (
 	_ "util"
 	_ "time"
 	"recordType"
-	//"communicator"
+	"communicator"
 	"dbconnector"
 )
 
@@ -17,10 +17,9 @@ func main() {
 	dbconnector.GenerateDatabases(pathToDatabase)
 
 	dbconnector.AddRecordToDatabase(recordType.Record{1, "Tuan", 1,11.111,"tuan","tuan"})
-	// IDK WHY THIS DOESNT WORK
 	dbconnector.AddInventoryToDatabase(recordType.ItemInventory{1, "TypeA", 10 , "1.1.2020" })	
 	// Electron here we go
-	// communicator.StartWebserver()
+	communicator.StartWebserver()
 }
 
 func createARecord(name string, quantity int, price float32, expirationDate string, dateOfRecord string) recordType.Record {

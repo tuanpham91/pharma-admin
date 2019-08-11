@@ -66,7 +66,7 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "A json format is required", http.StatusBadRequest)
 		return
 	}	
-	
+		
 }
 
 func StartWebserver() {

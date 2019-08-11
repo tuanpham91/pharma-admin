@@ -26,7 +26,11 @@ func GenerateDatabases(targetDb ...string) {
 	} else {
 		dbPath = databaseName
 	}
-	Database, _ = sql.Open("sqlite3", dbPath)
+	var err error
+	Database, err = sql.Open("sqlite3", dbPath)
+	if (err != nil) {
+		fmt.Println(err)
+	}
 	RunQuery(initializeInventoryTable)
 	RunQuery(initializeRecordTable)
 }

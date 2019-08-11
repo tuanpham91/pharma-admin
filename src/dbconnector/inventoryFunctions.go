@@ -27,7 +27,10 @@ func UpdateInventoryInDatabase(name string, mhd string, change int) {
 }
 
 func AddInventoryToDatabase(inv_record recordType.ItemInventory) {
-	statement, _ := Database.Prepare(addInventoryQuery)
+	statement, err := Database.Prepare(addInventoryQuery)
+	if (err != nil) {
+		fmt.Println(err)
+	}
 	statement.Exec(inv_record.Name, inv_record.Quantity, inv_record.ExpirationDate)
 }
 
