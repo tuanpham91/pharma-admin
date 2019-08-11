@@ -63,8 +63,8 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 	} 
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
-		http.Error(w, "A json format is required", http.StatusBadRequest)
-		return
+		//http.Error(w, "A json format is required", http.StatusBadRequest)
+		//return
 	}	
 	w.Header().Set("Content-Type", "application/json")
 	query := dbconnector.BaseQueryBuilder("med_record")

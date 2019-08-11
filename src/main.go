@@ -17,6 +17,8 @@ func main() {
 	dbconnector.GenerateDatabases(pathToDatabase)
 
 	dbconnector.AddRecordToDatabase(recordType.Record{1, "Tuan", 1,11.111,"tuan","tuan"})
+	dbconnector.AddRecordToDatabase(recordType.Record{1, "Tuan", 1,11.111,"tu2232an","tuan"})
+
 	dbconnector.AddInventoryToDatabase(recordType.ItemInventory{1, "TypeA", 10 , "1.1.2020" })	
 	// Electron here we go
 	communicator.StartWebserver()
