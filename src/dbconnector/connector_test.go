@@ -4,7 +4,6 @@ import (
 	"recordType"
 	"testing"
 	"strconv"
-	"database/sql"
 	"os"
 	"fmt"
 )
@@ -13,8 +12,7 @@ var pathToTestDatabase = "./test.db"
 
 func TestMain(m *testing.M) {
 	var err error
-	Database, err = sql.Open("sqlite3", pathToTestDatabase)
-	GenerateDatabases(pathToDatabase)
+	GenerateDatabases(pathToTestDatabase)
 	fmt.Print(err)
 	code := m.Run()	
 	os.Remove(pathToTestDatabase)

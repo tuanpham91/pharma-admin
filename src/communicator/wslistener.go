@@ -34,11 +34,11 @@ func getRecordRoute(w http.ResponseWriter, r *http.Request) {
 
 // To add a new record to database, must be POST
 func addRecordRequestRoute(w http.ResponseWriter, r *http.Request) {
-	//Check if content is JSON 
 	if (r.Method == "GET") {
 		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
 		return
 	} 
+	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
 		http.Error(w, "A json format is required", http.StatusBadRequest)
 		return
@@ -57,7 +57,16 @@ func addRecordRequestRoute(w http.ResponseWriter, r *http.Request) {
 
 // There should be some criterias to filter 
 func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
-
+	if (r.Method != "GET") {
+		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
+		return
+	} 
+	//Check if content is JSON
+	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
+		http.Error(w, "A json format is required", http.StatusBadRequest)
+		return
+	}	
+	
 }
 
 func StartWebserver() {

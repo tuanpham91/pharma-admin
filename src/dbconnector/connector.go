@@ -26,16 +26,22 @@ func GenerateDatabases(targetDb ...string) {
 	} else {
 		dbPath = databaseName
 	}
-	RunQuery(initializeInventoryTable, dbPath)
-	RunQuery(initializeRecordTable, dbPath)
+	Database, _ = sql.Open("sqlite3", dbPath)
+	RunQuery(initializeInventoryTable)
+	RunQuery(initializeRecordTable)
 }
 
-func RunQuery(query string, dbPath string) {
+func RunQuery(query string) {
 	statement, err := Database.Prepare(query)
 	if (err != nil) {
 		fmt.Print(err)
 	}
 	statement.Exec()
+}
+
+func ExecuteQuery(query string) *sql.Rows {
+	rows, _ := Database.Query(query)
+	return rows;
 }
 
 func TruncateTable() {
