@@ -9,7 +9,7 @@ type DBFilter struct {
 	Value		string
 }
 
-func BaseQueryBuilder (tableName string, filters []DBFilter) {
+func BaseQueryBuilder (tableName string, filters ...DBFilter) string {
 	var sb strings.Builder
 	sb.WriteString("SELECT * FROM " + tableName)
 	if (len(filters) > 0) {
@@ -18,6 +18,7 @@ func BaseQueryBuilder (tableName string, filters []DBFilter) {
 	for _, f := range filters {
 		sb.WriteString(f.Attribute + " " + f.Value)
 	}
+	return sb.String()
 }
 
 func GetRecordDataFromDBWithFilter(query string) []recordType.Record {

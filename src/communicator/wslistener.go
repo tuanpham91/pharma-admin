@@ -21,7 +21,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func setUpRoutes() {
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/record", getRecordRoute)
+	http.HandleFunc("/record", getRecordsWithQuery)
 	http.HandleFunc(addRecord, addRecordRequestRoute)
 }
 
@@ -66,7 +66,10 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "A json format is required", http.StatusBadRequest)
 		return
 	}	
-		
+	w.Header().Set("Content-Type", "application/json")
+	query := dbconnector.BaseQueryBuilder("med_record")
+	results := dbconnector.GetRecordDataFromDBWithFilter(query)
+	json.NewEncoder(w).Encode(results)
 }
 
 func StartWebserver() {
