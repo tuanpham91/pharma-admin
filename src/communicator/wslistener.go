@@ -63,6 +63,7 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 	} 
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
+		// TODO : Revert this
 		//http.Error(w, "A json format is required", http.StatusBadRequest)
 		//return
 	}	

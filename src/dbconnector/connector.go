@@ -81,8 +81,7 @@ func RowsToRecord(rows *sql.Rows) []recordType.Record {
 	}
 	for rows.Next() {
 		var r recordType.Record
-		var i int 
-		rows.Scan(&i, &r.Name, &r.Quantity, &r.Price, &r.ExpirationDate, &r.DateOfRecord)
+		rows.Scan(r.Id, &r.Name, &r.Quantity, &r.Price, &r.ExpirationDate, &r.DateOfRecord)
 		res = append(res, r)
 	}
 	return res
