@@ -13,6 +13,7 @@ var (
 	allRecords		="/record"
 	addRecord		="/addrecord"
 	removeRecord	="/rmrecord"
+	allInventory 	="/inventory"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -21,8 +22,10 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func setUpRoutes() {
 	http.HandleFunc("/", homePage)
-	http.HandleFunc("/record", getRecordsWithQuery)
+	http.HandleFunc(allRecords, getRecordsWithQuery)
 	http.HandleFunc(addRecord, addRecordRequestRoute)
+	http.HandleFunc(allInventory, getInventoryWithQuery)
+
 }
 
 func getRecordRoute(w http.ResponseWriter, r *http.Request) {
@@ -70,6 +73,23 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	query := dbconnector.BaseQueryBuilder("med_record")
 	results := dbconnector.GetRecordDataFromDBWithFilter(query)
+	json.NewEncoder(w).Encode(results)
+}
+
+func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
+	if (r.Method != "GET") {
+		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
+		return
+	} 
+	//Check if content is JSON
+	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
+		// TODO : Revert this
+		//http.Error(w, "A json format is required", http.StatusBadRequest)
+		//return
+	}	
+	w.Header().Set("Content-Type", "application/json")
+	query := dbconnector.BaseQueryBuilder("med_inventory")
+	results := dbconnector.GetInventoryDataFromDBWithFilter(query)
 	json.NewEncoder(w).Encode(results)
 }
 
