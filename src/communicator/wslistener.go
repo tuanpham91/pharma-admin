@@ -26,7 +26,6 @@ func setUpRoutes() {
 	http.HandleFunc(allRecords, getRecordsWithQuery)
 	http.HandleFunc(addRecord, addRecordRequestRoute)
 	http.HandleFunc(allInventory, getInventoryWithQuery)
-
 }
 
 func getRecordRoute(w http.ResponseWriter, r *http.Request) {
@@ -38,10 +37,12 @@ func getRecordRoute(w http.ResponseWriter, r *http.Request) {
 
 // To add a new record to database, must be POST
 func addRecordRequestRoute(w http.ResponseWriter, r *http.Request) {
+	/*
 	if (r.Method == "GET") {
 		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
 		return
 	} 
+	*/
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
 		http.Error(w, "A json format is required", http.StatusBadRequest)
@@ -59,31 +60,34 @@ func addRecordRequestRoute(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// There should be some criterias to filter 
+// TODO: There should be some criterias to filter 
+// Function which handles Request for Records.
 func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
+	/*
 	if (r.Method != "GET") {
 		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
 		return
 	} 
+	*/
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
 		// TODO : Revert this
 		//http.Error(w, "A json format is required", http.StatusBadRequest)
 		//return
 	}	
-	fmt.Printf("Receive a request to Record")
+	
 
 	// TODO : Check request Body for DBFilter:
 	requestBody, err := ioutil.ReadAll(r.Body)
+	fmt.Printf("Receive a request to Record with content :%s\n", string(requestBody))
 	var query string
 	if (err != nil) {
 		query = dbconnector.BaseQueryBuilder("med_record")
-		fmt.Printf("Request body")
-
+		fmt.Printf(err.Error())
 	} else {
 		// Convert Request Body to array of DBFilter
-		fmt.Printf("Request body")
 		filters := getDBFilterFromJsonPayload(requestBody)
+		//fmt.Printf("%v",filters)
 		// TODO Refactor this 
 		query = dbconnector.BaseQueryBuilder("med_record", filters...)
 	}
@@ -109,13 +113,14 @@ func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
 		return
 	} 
-	fmt.Printf("Receive a request to Inventory")
+	fmt.Printf("Receive a request to Inventory \n")
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
 		// TODO : Revert this
 		//http.Error(w, "A json format is required", http.StatusBadRequest)
 		//return
 	}	
+	
 	w.Header().Set("Content-Type", "application/json")
 	query := dbconnector.BaseQueryBuilder("med_inventory")
 	results := dbconnector.GetInventoryDataFromDBWithFilter(query)
