@@ -13,7 +13,7 @@ var pathToDatabase = "./record.db"
 
 func main() {
 
-	fmt.Println("Welcome to Smart Pharma")
+	fmt.Println("Welcome to Smart Pharma oh yehaww")
 	dbconnector.GenerateDatabases(pathToDatabase)
 	// Electron here we go
 	communicator.StartWebserver()

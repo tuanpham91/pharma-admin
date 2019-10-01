@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"strings"
 	"dbconnector"
+	"io/ioutil"
 )
 
 var (
@@ -29,11 +30,11 @@ func setUpRoutes() {
 }
 
 func getRecordRoute(w http.ResponseWriter, r *http.Request) {
-	//TODO read arguements from request
 	testRecord := recordType.ItemInventory{1, "Test", 1, "1.1.2020"}
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(testRecord)
 }
+
 
 // To add a new record to database, must be POST
 func addRecordRequestRoute(w http.ResponseWriter, r *http.Request) {
@@ -70,10 +71,37 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 		//http.Error(w, "A json format is required", http.StatusBadRequest)
 		//return
 	}	
+	fmt.Printf("Receive a request to Record")
+
+	// TODO : Check request Body for DBFilter:
+	requestBody, err := ioutil.ReadAll(r.Body)
+	var query string
+	if (err != nil) {
+		query = dbconnector.BaseQueryBuilder("med_record")
+		fmt.Printf("Request body")
+
+	} else {
+		// Convert Request Body to array of DBFilter
+		fmt.Printf("Request body")
+		filters := getDBFilterFromJsonPayload(requestBody)
+		// TODO Refactor this 
+		query = dbconnector.BaseQueryBuilder("med_record", filters...)
+	}
+
 	w.Header().Set("Content-Type", "application/json")
-	query := dbconnector.BaseQueryBuilder("med_record")
 	results := dbconnector.GetRecordDataFromDBWithFilter(query)
 	json.NewEncoder(w).Encode(results)
+}
+
+
+func getDBFilterFromJsonPayload(payload []byte) []dbconnector.DBFilter {
+	var filters []dbconnector.DBFilter
+	err := json.Unmarshal(payload, filters)
+	if (err != nil) {
+		return make([]dbconnector.DBFilter, 0)
+	} else {
+		return filters
+	}
 }
 
 func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
@@ -81,6 +109,7 @@ func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "This type of Request is not allowed", http.StatusBadRequest)
 		return
 	} 
+	fmt.Printf("Receive a request to Inventory")
 	//Check if content is JSON
 	if (!strings.Contains(r.Header.Get("Content-Type"),"json")){
 		// TODO : Revert this
@@ -94,7 +123,7 @@ func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
 }
 
 func StartWebserver() {
-	fmt.Printf("Start Webserver at local host and port 8080 \n")
+	fmt.Printf("Start Webserver at local host and port 8080 right now\n")
 	setUpRoutes()
 	http.ListenAndServe(":8080", nil)
 }
