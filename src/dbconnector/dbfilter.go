@@ -13,10 +13,10 @@ func BaseQueryBuilder (tableName string, filters ...DBFilter) string {
 	var sb strings.Builder
 	sb.WriteString("SELECT * FROM " + tableName)
 	if (len(filters) > 0) {
-		sb.WriteString(" WHERE")
+		sb.WriteString(" WHERE ")
 	}
 	for _, f := range filters {
-		sb.WriteString(f.Attribute + " " + f.Value)
+		sb.WriteString(f.Attribute + "=" + f.Value + " ")
 	}
 	return sb.String()
 }

@@ -77,14 +77,23 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 
 
 func getDBFilterFromJsonPayload(payload []byte) []dbconnector.DBFilter {
-	var filters []dbconnector.DBFilter
+	var filters [][] string
 	err := json.Unmarshal(payload, &filters)
 	if (err != nil) {
 		fmt.Printf("Error while parsing DBFilters %s\n ", err.Error())
 		return make([]dbconnector.DBFilter, 0)
 	} else {
-		return filters
+		// TODO : Loop through the array to convert to DBFilter
+		var dbFilters =  make([]dbconnector.DBFilter, len(filters))
+		for i:=0 ; i<len(filters); i++ {
+			dbFilters[i] = dbconnector.DBFilter{filters[i][0], filters[i][1]}
+		}
+		return dbFilters
 	}
+}
+
+func arrayToDBFilter(ar []string) dbconnector.DBFilter {
+	return dbconnector.DBFilter{ar[0], ar[1]}
 }
 
 func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
@@ -111,8 +120,7 @@ func buildQueryWithFilters(tableName string, r *http.Request ) string {
 		// Convert Request Body to array of DBFilter
 		filters := getDBFilterFromJsonPayload(requestBody)
 		//fmt.Printf("%v",filters)
-		// TODO Refactor this 
-		query = dbconnector.BaseQueryBuilder(tableName, filters...)
+ 		query = dbconnector.BaseQueryBuilder(tableName, filters...)
 	}
 	fmt.Printf("Getting Record with Query :%s \n", query)
 
