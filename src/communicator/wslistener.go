@@ -72,6 +72,7 @@ func getRecordsWithQuery(w http.ResponseWriter, r *http.Request) {
 	query:= buildQueryWithFilters("med_record", r)
 	w.Header().Set("Content-Type", "application/json")
 	results := dbconnector.GetRecordDataFromDBWithFilter(query)
+	fmt.Println("Request return with " + string(len(results)))
 	json.NewEncoder(w).Encode(results)
 }
 
