@@ -16,14 +16,17 @@ func BaseQueryBuilder (tableName string, filters ...DBFilter) string {
 		sb.WriteString(" WHERE ")
 	}
 	for i, f := range filters {
-		//TODO
 		if (i != len(filters) -1) {
-			sb.WriteString(f.Attribute + "=" + f.Value + " AND ")
+			sb.WriteString(f.Attribute + "=" + WrapValueAroundQuotation(f.Value) + " AND ")
 		} else {
-			sb.WriteString(f.Attribute + "=" + f.Value)
+			sb.WriteString(f.Attribute + "=" + WrapValueAroundQuotation(f.Value))
 		}
 	}
 	return sb.String()
+}
+
+func WrapValueAroundQuotation(value string) string {
+	return "\""+value+"\""
 }
 
 func GetRecordDataFromDBWithFilter(query string) []recordType.Record {
