@@ -15,8 +15,13 @@ func BaseQueryBuilder (tableName string, filters ...DBFilter) string {
 	if (len(filters) > 0) {
 		sb.WriteString(" WHERE ")
 	}
-	for _, f := range filters {
-		sb.WriteString(f.Attribute + "=" + f.Value + " ")
+	for i, f := range filters {
+		//TODO
+		if (i != len(filters) -1) {
+			sb.WriteString(f.Attribute + "=" + f.Value + " AND ")
+		} else {
+			sb.WriteString(f.Attribute + "=" + f.Value)
+		}
 	}
 	return sb.String()
 }
