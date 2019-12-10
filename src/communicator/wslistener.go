@@ -105,7 +105,7 @@ func getInventoryWithQuery(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Receive a request to Inventory \n")
 	
 	w.Header().Set("Content-Type", "application/json")
-	query:= buildQueryWithFilters("med_record", r)
+	query:= buildQueryWithFilters("med_inventory", r)
 	results := dbconnector.GetInventoryDataFromDBWithFilter(query)
 	json.NewEncoder(w).Encode(results)
 }
